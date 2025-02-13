@@ -44,7 +44,7 @@ interface FortniteItem {
 
 export const getDailyShop = async () => {
   try {
-    const response = await fetch('https://fortniteapi.io/v2/shop?lang=es', {
+    const response = await fetch('https://fortniteapi.io/v2/shop?lang=en', {
       headers: {
         'Authorization': 'eafc4329-54aeed01-a90cd52b-f749534c'
       }

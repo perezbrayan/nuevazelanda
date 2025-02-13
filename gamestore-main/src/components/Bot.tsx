@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { apiConfig } from '../config/api';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations';
+import { Bot as BotIcon, MessageCircle, Gift, Zap, Shield, CheckCircle2, XCircle, Send } from 'lucide-react';
 
 interface BotStatus {
   isAuthenticated: boolean;
@@ -96,21 +97,18 @@ const Bot: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      {/* Hero Section con efecto parallax */}
-      <div className="relative h-[40vh] overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('/fortnite-crew-bg.jpg')"
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FAFAFA] to-transparent" />
-        <div className="relative h-full flex flex-col items-center justify-center">
-          <div className="text-center space-y-2">
-            <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-600 leading-relaxed pb-1">
+      {/* Hero Section */}
+      <div className="relative pt-32 pb-20 px-4">
+        <div className="absolute inset-0 bg-[url('/circuit-pattern.png')] opacity-5"></div>
+        <div className="max-w-7xl mx-auto relative">
+          <div className="text-center">
+            <div className="inline-block p-3 bg-primary-100 rounded-2xl mb-6">
+              <BotIcon className="w-12 h-12 text-primary-600" />
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold text-primary-900 mb-6">
               {t.botTitle}
             </h1>
-            <p className="text-lg text-white">
+            <p className="text-xl text-primary-600 max-w-2xl mx-auto">
               {t.botDescription}
             </p>
           </div>
@@ -118,96 +116,121 @@ const Bot: React.FC = () => {
       </div>
 
       {/* Contenido Principal */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 pb-20">
         <div className="max-w-4xl mx-auto">
           {/* Estado del Bot */}
-          <div className="bg-[#ADADAD] rounded-xl p-6 mb-8 shadow-lg border-2 border-gray-400">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">{t.botStatus}</h2>
-            <div className="space-y-2">
-              <p className="text-gray-700">
-                <span className="font-bold">{t.connectionStatus}:</span>{' '}
-                <span className={`${botStatus.isAuthenticated ? 'text-green-600' : 'text-red-600'}`}>
-                  {botStatus.isAuthenticated ? t.connected : t.disconnected}
+          <div className="bg-white rounded-2xl p-8 mb-12 border border-primary-100 shadow-lg">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="p-3 bg-primary-100 rounded-xl">
+                <Shield className="w-6 h-6 text-primary-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-primary-900">{t.botStatus}</h2>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${botStatus.isAuthenticated ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
+                <span className="text-lg text-gray-700">
+                  {t.connectionStatus}:{' '}
+                  <span className={`font-medium ${botStatus.isAuthenticated ? 'text-green-600' : 'text-red-600'}`}>
+                    {botStatus.isAuthenticated ? t.connected : t.disconnected}
+                  </span>
                 </span>
-              </p>
+              </div>
               {botStatus.displayName && (
-                <p className="text-gray-700">
-                  <span className="font-bold">{t.botName}:</span> {botStatus.displayName}
-                </p>
+                <div className="flex items-center gap-3 text-gray-700">
+                  <MessageCircle className="w-5 h-5 text-primary-600" />
+                  <span>{t.botName}: <span className="font-medium">{botStatus.displayName}</span></span>
+                </div>
               )}
               {botStatus.lastError && (
-                <p className="text-red-600">
-                  <span className="font-bold">{t.error}:</span> {botStatus.lastError}
-                </p>
+                <div className="flex items-center gap-3 text-red-600">
+                  <XCircle className="w-5 h-5" />
+                  <span>{t.error}: {botStatus.lastError}</span>
+                </div>
               )}
             </div>
           </div>
 
           {/* Pasos */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-[#ADADAD] rounded-xl p-6 text-gray-800 shadow-lg border-2 border-gray-400 transform transition-all hover:scale-105">
-              <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold mb-4 text-lg border-2 border-gray-600">
-                1
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {[
+              {
+                icon: <MessageCircle className="w-6 h-6 text-primary-600" />,
+                title: t.step1Title,
+                description: t.step1Description
+              },
+              {
+                icon: <CheckCircle2 className="w-6 h-6 text-primary-600" />,
+                title: t.step2Title,
+                description: t.step2Description
+              },
+              {
+                icon: <Gift className="w-6 h-6 text-primary-600" />,
+                title: t.step3Title,
+                description: t.step3Description
+              }
+            ].map((step, index) => (
+              <div key={index} className="group">
+                <div className="relative bg-white rounded-2xl p-6 border border-primary-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:border-primary-200 h-full">
+                  <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-primary-900 mb-3">{step.title}</h3>
+                  <p className="text-primary-600">{step.description}</p>
+                </div>
               </div>
-              <h3 className="text-lg font-bold mb-2">{t.step1Title}</h3>
-              <p className="text-gray-700 text-sm">
-                {t.step1Description}
-              </p>
-            </div>
-
-            <div className="bg-[#ADADAD] rounded-xl p-6 text-gray-800 shadow-lg border-2 border-gray-400 transform transition-all hover:scale-105">
-              <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold mb-4 text-lg border-2 border-gray-600">
-                2
-              </div>
-              <h3 className="text-lg font-bold mb-2">{t.step2Title}</h3>
-              <p className="text-gray-700 text-sm">
-                {t.step2Description}
-              </p>
-            </div>
-
-            <div className="bg-[#ADADAD] rounded-xl p-6 text-gray-800 shadow-lg border-2 border-gray-400 transform transition-all hover:scale-105">
-              <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold mb-4 text-lg border-2 border-gray-600">
-                3
-              </div>
-              <h3 className="text-lg font-bold mb-2">{t.step3Title}</h3>
-              <p className="text-gray-700 text-sm">
-                {t.step3Description}
-              </p>
-            </div>
+            ))}
           </div>
 
           {/* Formulario */}
-          <div className="bg-[#ADADAD] rounded-xl p-6 shadow-lg border-2 border-gray-400">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="username" className="block text-lg font-bold text-gray-800 mb-2">
-                  {t.fortniteUsername}
-                </label>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border-2 border-gray-400 rounded-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent shadow-inner"
-                  placeholder={t.usernamePlaceholder}
-                  disabled={loading}
-                />
-              </div>
+          <div className="relative">
+            <div className="bg-white rounded-2xl p-8 border border-primary-100 shadow-lg">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="username" className="block text-lg font-bold text-primary-900 mb-3">
+                    {t.fortniteUsername}
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="username"
+                      name="username"
+                      type="text"
+                      required
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="w-full px-5 py-4 bg-white border border-primary-200 rounded-xl text-primary-900 placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder={t.usernamePlaceholder}
+                      disabled={loading}
+                    />
+                  </div>
+                </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full py-3 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg font-bold text-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg border-2 border-gray-600`}
-              >
-                {loading ? t.sendingRequest : t.sendFriendRequest}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-4 px-6 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 shadow-lg shadow-primary-600/20"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>{t.sendingRequest}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      <span>{t.sendFriendRequest}</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer 
+        position="bottom-right"
+        theme="dark"
+      />
     </div>
   );
 };
