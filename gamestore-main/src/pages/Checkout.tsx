@@ -4,13 +4,49 @@ import { useCart } from '../context/CartContext';
 import { Check, Gift, LogOut } from 'lucide-react';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations';
+
+interface CheckoutItem {
+  mainId: string;
+  offerId: string;
+  displayName: string;
+  price: {
+    finalPrice: number;
+  };
+  image: string;
+}
+
+interface OrderSummaryProps {
+  item: CheckoutItem;
+  onContinue: () => void;
+}
+
+interface UserInformationProps {
+  onContinue: (username: string) => void;
+  onBack: () => void;
+}
+
+interface PaymentInformationProps {
+  onContinue: (info: { paymentProof: File }) => void;
+  onBack: () => void;
+}
+
+interface PaymentProps {
+  item: CheckoutItem;
+  username: string;
+  onBack: () => void;
+}
 
 const CheckoutSteps = ({ currentStep, isAuthenticated }: { currentStep: number, isAuthenticated: boolean }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
+  
   const steps = [
-    { title: 'Resumen', description: 'Detalles del producto' },
-    ...(!isAuthenticated ? [{ title: 'Usuario', description: 'Información de usuario' }] : []),
-    { title: 'Datos de Pago', description: 'Información de pago' },
-    { title: 'Confirmar', description: 'Confirmar y pagar' }
+    { title: t.orderSummary, description: t.productDetails },
+    ...(!isAuthenticated ? [{ title: t.userInformation, description: t.enterFortniteUsername }] : []),
+    { title: t.paymentInformation, description: t.bankDetails },
+    { title: t.confirmOrder, description: t.orderConfirmed }
   ];
 
   return (
@@ -56,9 +92,11 @@ const CheckoutSteps = ({ currentStep, isAuthenticated }: { currentStep: number, 
   );
 };
 
-const OrderSummary = ({ item, onContinue }) => {
+const OrderSummary = ({ item, onContinue }: OrderSummaryProps) => {
   const navigate = useNavigate();
   const { items: cartItems } = useCart();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   const handleBack = () => {
     if (cartItems.length > 0) {
@@ -70,7 +108,7 @@ const OrderSummary = ({ item, onContinue }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">Detalles del Producto</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-8">{t.productDetails}</h2>
       <div className="flex gap-8 mb-8">
         <div className="w-1/3">
           <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100">
@@ -86,12 +124,12 @@ const OrderSummary = ({ item, onContinue }) => {
           <div className="space-y-3 mb-6">
             <div className="flex items-center gap-2 text-gray-600">
               <Gift className="w-5 h-5 text-primary-500" />
-              <span>Regalo Especial</span>
+              <span>{t.specialGift}</span>
             </div>
-            <p className="text-gray-600">Cantidad: 1</p>
+            <p className="text-gray-600">{t.quantity}: 1</p>
             <div className="flex items-center gap-2">
               <span className="text-3xl font-bold text-primary-600">{item.price.finalPrice}</span>
-              <span className="text-gray-500">V-Bucks</span>
+              <span className="text-gray-500">{t.vbucks}</span>
             </div>
           </div>
         </div>
@@ -101,27 +139,29 @@ const OrderSummary = ({ item, onContinue }) => {
           onClick={handleBack}
           className="px-6 py-2 text-gray-600 hover:text-gray-900 transition-colors"
         >
-          Volver a la tienda
+          {t.backToStore}
         </button>
         <button
           onClick={onContinue}
           className="px-8 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20"
         >
-          Continuar
+          {t.continue}
         </button>
       </div>
     </div>
   );
 };
 
-const UserInformation = ({ onContinue, onBack }) => {
+const UserInformation = ({ onContinue, onBack }: UserInformationProps) => {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
+  const { language } = useLanguage();
+  const t = translations[language];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
-      setError('Por favor ingresa tu nombre de usuario');
+      setError(t.enterUsername);
       return;
     }
     onContinue(username);
@@ -129,11 +169,11 @@ const UserInformation = ({ onContinue, onBack }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">Información de Usuario</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-8">{t.userInformation}</h2>
       <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-6">
         <div>
           <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-            Nombre de Usuario de Fortnite
+            {t.fortniteUsername}
           </label>
           <input
             type="text"
@@ -141,7 +181,7 @@ const UserInformation = ({ onContinue, onBack }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
-            placeholder="Ingresa tu usuario de Fortnite"
+            placeholder={t.enterFortniteUsername}
           />
           {error && (
             <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
@@ -156,13 +196,13 @@ const UserInformation = ({ onContinue, onBack }) => {
             onClick={onBack}
             className="px-6 py-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
-            Atrás
+            {t.back}
           </button>
           <button
             type="submit"
             className="px-8 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20"
           >
-            Continuar
+            {t.continue}
           </button>
         </div>
       </form>
@@ -170,27 +210,28 @@ const UserInformation = ({ onContinue, onBack }) => {
   );
 };
 
-const PaymentInformation = ({ onContinue, onBack }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
+const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [error, setError] = useState('');
-  const fileInputRef = React.useRef(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const { language } = useLanguage();
+  const t = translations[language];
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files[0];
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       if (!file.type.startsWith('image/')) {
-        setError('Por favor selecciona una imagen válida (PNG, JPG, JPEG)');
+        setError(t.invalidImage);
         return;
       }
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setError('La imagen no debe superar los 5MB');
+      if (file.size > 5 * 1024 * 1024) {
+        setError(t.imageSizeLimit);
         return;
       }
       setSelectedFile(file);
       setError('');
       
-      // Create preview URL and store in localStorage
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string;
@@ -201,10 +242,10 @@ const PaymentInformation = ({ onContinue, onBack }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedFile) {
-      setError('Por favor sube tu comprobante de pago');
+      setError(t.uploadRequired);
       return;
     }
     onContinue({ paymentProof: selectedFile });
@@ -216,21 +257,21 @@ const PaymentInformation = ({ onContinue, onBack }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">Información de Pago</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-8">{t.paymentInformation}</h2>
       <div className="max-w-xl mx-auto">
         <div className="bg-blue-50 p-6 rounded-xl mb-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">Datos Bancarios para la Transferencia</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-4">{t.bankDetails}</h3>
           <div className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-blue-900">Banco</p>
+              <p className="text-sm font-medium text-blue-900">{t.bank}</p>
               <p className="text-blue-800">Banco Internacional del Perú - Interbank</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-blue-900">Número de Cuenta</p>
+              <p className="text-sm font-medium text-blue-900">{t.accountNumber}</p>
               <p className="text-blue-800">123-456789-012</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-blue-900">Titular de la Cuenta</p>
+              <p className="text-sm font-medium text-blue-900">{t.accountHolder}</p>
               <p className="text-blue-800">Game Store S.A.C.</p>
             </div>
             <div>
@@ -239,8 +280,7 @@ const PaymentInformation = ({ onContinue, onBack }) => {
             </div>
             <div className="pt-4">
               <p className="text-sm text-blue-700">
-                <strong>Importante:</strong> Una vez realizado el pago, sube una captura o foto 
-                de tu comprobante de pago y haz clic en Continuar.
+                <strong>{t.uploadRequired}</strong>
               </p>
             </div>
           </div>
@@ -249,7 +289,7 @@ const PaymentInformation = ({ onContinue, onBack }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Comprobante de Pago
+              {t.paymentProof}
             </label>
             <input
               type="file"
@@ -267,14 +307,14 @@ const PaymentInformation = ({ onContinue, onBack }) => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                 </svg>
-                {selectedFile ? 'Cambiar comprobante' : 'Subir comprobante'}
+                {selectedFile ? t.changeProof : t.uploadProof}
               </button>
               
               {previewUrl && (
                 <div className="relative rounded-lg overflow-hidden">
                   <img 
                     src={previewUrl} 
-                    alt="Vista previa del comprobante" 
+                    alt={t.paymentProof} 
                     className="w-full h-auto"
                   />
                 </div>
@@ -294,13 +334,13 @@ const PaymentInformation = ({ onContinue, onBack }) => {
               onClick={onBack}
               className="px-6 py-2 text-gray-600 hover:text-gray-900 transition-colors"
             >
-              Atrás
+              {t.back}
             </button>
             <button
               type="submit"
               className="px-8 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-600/20"
             >
-              Continuar
+              {t.continue}
             </button>
           </div>
         </form>
@@ -309,14 +349,15 @@ const PaymentInformation = ({ onContinue, onBack }) => {
   );
 };
 
-const Payment = ({ item, username, onBack }) => {
+const Payment = ({ item, username, onBack }: PaymentProps) => {
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const { language } = useLanguage();
+  const t = translations[language];
   const mounted = React.useRef(true);
 
-  // Cleanup al desmontar
   React.useEffect(() => {
     return () => {
       mounted.current = false;
@@ -324,122 +365,116 @@ const Payment = ({ item, username, onBack }) => {
   }, []);
 
   const handlePayment = async () => {
-    if (processing) return; // Evitar múltiples clicks
+    if (processing) return;
 
     try {
       setProcessing(true);
       setError('');
       setSuccess(false);
       
-      // Validar campos requeridos
       if (!item.offerId || !item.displayName || !item.price?.finalPrice || !username) {
-        setError('Faltan datos requeridos para procesar la orden');
+        setError(t.requiredFields);
         setProcessing(false);
         return;
       }
 
-      // Crear FormData para enviar la imagen
       const formData = new FormData();
       formData.append('offer_id', item.offerId);
       formData.append('item_name', item.displayName);
       formData.append('price', item.price.finalPrice.toString());
       formData.append('username', username);
       
-      // Obtener el archivo de pago del localStorage
       const paymentProofFile = localStorage.getItem('paymentProof');
       if (paymentProofFile) {
-        // Convertir la cadena base64 a un archivo
         const response = await fetch(paymentProofFile);
         const blob = await response.blob();
         formData.append('payment_receipt', blob, 'payment_receipt.jpg');
       }
 
-      console.log('Enviando datos de orden:', {
-        offer_id: item.offerId,
-        item_name: item.displayName,
-        price: item.price.finalPrice,
-        username: username,
-        hasPaymentProof: !!paymentProofFile
-      });
-
-      // Crear la orden de Fortnite
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/db/api/fortnite/orders`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      console.log('Respuesta del servidor:', response.data);
-
-      // Limpiar el comprobante de pago del localStorage
       localStorage.removeItem('paymentProof');
 
-      // Solo actualizar el estado si el componente sigue montado
       if (mounted.current) {
         if (response.data.success) {
           setSuccess(true);
-          // Mostrar el mensaje de éxito de la respuesta
-          const message = response.data.data?.message || '¡Orden creada exitosamente!';
-          console.log('Orden creada:', message);
+          setProcessing(false);
           
-          // Mostrar mensaje de orden en proceso y redirigir al inicio
-          setSuccess(true);
           setTimeout(() => {
             if (mounted.current) {
               navigate('/', { 
                 state: { 
-                  message: 'Orden en proceso. Pronto recibirás tu regalo en Fortnite.',
+                  message: t.orderProcessing,
                   type: 'success'
                 }
               });
             }
-          }, 2000);
+          }, 3000);
         } else {
-          setError('No se pudo procesar la orden. Por favor, intente nuevamente.');
+          setError(t.orderError);
+          setProcessing(false);
         }
-        // Asegurarnos de que processing se actualice
-        setProcessing(false);
       }
-    } catch (err) {
-      console.error('Error al crear orden:', err);
-      console.error('Detalles del error:', err.response?.data);
-      // Solo actualizar el estado si el componente sigue montado
-      if (mounted.current) {
-        setError(
-          err.response?.data?.error || 
-          'Error al crear la orden. Por favor, intente nuevamente.'
-        );
+    } catch (error: unknown) {
+      console.error('Error al crear orden:', error);
+      if (error instanceof Error) {
+        console.error('Detalles del error:', (error as any).response?.data);
+        if (mounted.current) {
+          setError(
+            ((error as any).response?.data?.error as string) || 
+            t.orderError
+          );
+          setProcessing(false);
+        }
       }
-      // Asegurarnos de que processing se actualice
-      setProcessing(false);
     }
   };
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Confirmar Orden</h2>
+      <h2 className="text-xl font-semibold">{t.confirmOrder}</h2>
       
-      {/* Mostrar mensaje de éxito */}
       {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-4">
-          <div className="flex items-center justify-center">
-            <div className="w-6 h-6 border-2 border-green-600 border-t-transparent rounded-full animate-spin mr-2" />
-            <span className="block sm:inline font-medium">Orden en proceso. Redirigiendo...</span>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">{t.orderSuccess}</h3>
+              <div className="bg-gray-50 p-4 rounded-xl mb-4">
+                <div className="text-left space-y-2">
+                  <p className="text-gray-600"><span className="font-medium">{t.fortniteUsername}:</span> {username}</p>
+                  <p className="text-gray-600"><span className="font-medium">{t.item}:</span> {item.displayName}</p>
+                  <p className="text-gray-600"><span className="font-medium">{t.price}:</span> {item.price.finalPrice} {t.vbucks}</p>
+                  <p className="text-gray-600"><span className="font-medium">{t.status}:</span> <span className="text-primary-600">{t.processing}</span></p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-2">{t.orderProcessing}</p>
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mt-4">
+                <div className="w-1/3 h-full bg-primary-600 animate-[progress_3s_ease-in-out_infinite]"></div>
+              </div>
+              <p className="text-gray-500 text-sm mt-4">{t.redirecting}</p>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Mostrar error si existe */}
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4">
           <span className="block sm:inline">{error}</span>
         </div>
       )}
 
       <div className="bg-white p-6 rounded-lg shadow space-y-6">
-        {/* Resumen de la compra */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Resumen de la Compra</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t.orderSummary}</h3>
           
           <div className="flex gap-4 items-start border-b border-gray-100 pb-4">
             <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-50">
@@ -451,28 +486,28 @@ const Payment = ({ item, username, onBack }) => {
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-gray-900">{item.displayName}</h4>
-              <p className="text-sm text-gray-500">Usuario de Fortnite: {username}</p>
+              <p className="text-sm text-gray-500">{t.fortniteUsername}: {username}</p>
             </div>
             <div className="text-right">
-              <p className="font-medium text-gray-900">{item.price.finalPrice} V-Bucks</p>
+              <p className="font-medium text-gray-900">{item.price.finalPrice} {t.vbucks}</p>
             </div>
           </div>
 
           <div className="pt-4">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="text-gray-900">{item.price.finalPrice} V-Bucks</span>
+              <span className="text-gray-600">{t.total}</span>
+              <span className="text-gray-900">{item.price.finalPrice} {t.vbucks}</span>
             </div>
             <div className="flex justify-between font-medium text-lg mt-4">
-              <span className="text-gray-900">Total a Pagar</span>
-              <span className="text-primary-600">{item.price.finalPrice} V-Bucks</span>
+              <span className="text-gray-900">{t.total}</span>
+              <span className="text-primary-600">{item.price.finalPrice} {t.vbucks}</span>
             </div>
           </div>
         </div>
 
         <div className="border-t border-gray-100 pt-6">
           <p className="text-gray-600 mb-6">
-            Al hacer clic en "Confirmar Orden", confirmas que has realizado el pago y aceptas procesar esta orden.
+            {t.confirmOrder}
           </p>
           
           <div className="flex justify-between items-center">
@@ -481,7 +516,7 @@ const Payment = ({ item, username, onBack }) => {
               className="px-4 py-2 text-gray-600 hover:text-gray-800"
               disabled={processing}
             >
-              Atrás
+              {t.back}
             </button>
             
             <button
@@ -494,10 +529,10 @@ const Payment = ({ item, username, onBack }) => {
               {processing ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Procesando...</span>
+                  <span>{t.processing}</span>
                 </>
               ) : (
-                <span>Confirmar Orden</span>
+                <span>{t.confirmOrder}</span>
               )}
             </button>
           </div>
@@ -510,11 +545,12 @@ const Payment = ({ item, username, onBack }) => {
 const Checkout = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [username, setUsername] = useState('');
-  const [paymentInfo, setPaymentInfo] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState<{ paymentProof: File } | null>(null);
   const { items } = useCart();
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const t = translations[language];
 
-  // Obtener información del usuario del localStorage
   const userJson = localStorage.getItem('user');
   const user = userJson ? JSON.parse(userJson) : null;
   const isAuthenticated = !!user;
@@ -524,7 +560,6 @@ const Checkout = () => {
       navigate('/fortnite-shop');
     }
 
-    // Si hay un usuario autenticado, establecer su nombre de usuario
     if (user) {
       setUsername(user.username);
     }
@@ -534,13 +569,13 @@ const Checkout = () => {
     setCurrentStep(isAuthenticated ? 2 : 2);
   };
 
-  const handleContinueFromUser = (username) => {
-    setUsername(username);
+  const handleContinueFromUser = (newUsername: string) => {
+    setUsername(newUsername);
     setCurrentStep(3);
   };
 
-  const handleContinueFromPayment = (paymentInfo) => {
-    setPaymentInfo(paymentInfo);
+  const handleContinueFromPayment = (info: { paymentProof: File }) => {
+    setPaymentInfo(info);
     setCurrentStep(isAuthenticated ? 3 : 4);
   };
 
@@ -573,7 +608,7 @@ const Checkout = () => {
       {(currentStep === 3 && !isAuthenticated) && (
         <PaymentInformation onContinue={handleContinueFromPayment} onBack={handleBackFromPayment} />
       )}
-      {(currentStep === 3 && isAuthenticated) || (currentStep === 4 && !isAuthenticated) && (
+      {((currentStep === 3 && isAuthenticated) || (currentStep === 4 && !isAuthenticated)) && (
         <Payment item={items[0]} username={username} onBack={handleBackFromConfirmation} />
       )}
     </div>

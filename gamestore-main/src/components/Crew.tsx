@@ -1,33 +1,38 @@
 import React, { useState } from 'react';
 import { Crown, ShoppingCart, User, Coins, Trophy, Rocket, Gift, Sparkles } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations';
 
 const Crew = () => {
   const [selectedPlan, setSelectedPlan] = useState<number>(0);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   const plans = [
     {
-      duration: "1 Mes",
-      price: "COP 25,000.00",
-      monthly: "COP 25,000.00 / mes",
-      savings: null
+      duration: 1,
+      price: 25000,
+      monthlyPrice: 25000,
+      savings: 0,
+      selected: true
     },
     {
-      duration: "2 Meses",
-      price: "COP 44,000.00",
-      monthly: "COP 22,000.00 / mes",
-      savings: "Ahorras COP 6,000.00"
+      duration: 2,
+      price: 44000,
+      monthlyPrice: 22000,
+      savings: 6000
     },
     {
-      duration: "3 Meses",
-      price: "COP 60,000.00",
-      monthly: "COP 20,000.00 / mes",
-      savings: "Ahorras COP 15,000.00"
+      duration: 3,
+      price: 60000,
+      monthlyPrice: 20000,
+      savings: 15000
     },
     {
-      duration: "6 Meses",
-      price: "COP 105,000.00",
-      monthly: "COP 17,500.00 / mes",
-      savings: "Ahorras COP 45,000.00"
+      duration: 6,
+      price: 105000,
+      monthlyPrice: 17500,
+      savings: 45000
     }
   ];
 
@@ -46,11 +51,11 @@ const Crew = () => {
           <div className="text-center mt-16 space-y-2">
             <div className="relative">
               <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-600 leading-relaxed pb-1">
-                Elige tu Plan
+                {t.choosePlan}
               </h1>
             </div>
             <p className="text-xl text-gray-100">
-              Únete al Crew y obtén recompensas exclusivas
+              {t.joinCrewDescription}
             </p>
           </div>
         </div>
@@ -73,22 +78,22 @@ const Crew = () => {
               <div className="absolute top-0 right-0 w-20 h-20">
                 {selectedPlan === index && (
                   <div className="absolute top-[6px] right-[-24px] rotate-45 bg-yellow-400 text-black text-xs py-1 w-32 text-center font-bold">
-                    SELECTED
+                    {t.selected}
                   </div>
                 )}
               </div>
               
               <div className="p-6">
-                <h3 className="text-2xl font-bold mb-4">{plan.duration}</h3>
+                <h3 className="text-2xl font-bold mb-4">{plan.duration} {plan.duration === 1 ? t.month : t.months}</h3>
                 <div className={`text-3xl font-bold mb-2 ${selectedPlan === index ? 'text-white' : 'text-cyan-500'}`}>
-                  {plan.price}
+                  COP {plan.price.toLocaleString()}
                 </div>
                 <div className={`text-sm mb-2 ${selectedPlan === index ? 'text-gray-100' : 'text-gray-500'}`}>
-                  {plan.monthly}
+                  COP {plan.monthlyPrice.toLocaleString()} {t.perMonth}
                 </div>
-                {plan.savings && (
+                {plan.savings > 0 && (
                   <div className="text-sm font-medium text-green-500">
-                    {plan.savings}
+                    {t.youSave} COP {plan.savings.toLocaleString()}
                   </div>
                 )}
               </div>
@@ -96,12 +101,12 @@ const Crew = () => {
               <div className={`mt-4 p-4 ${selectedPlan === index ? 'bg-black bg-opacity-20' : 'bg-gray-50'}`}>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
-                    <Crown className={`w-4 h-4 ${selectedPlan === index ? 'text-yellow-400' : 'text-yellow-500'}`} />
-                    <span>Skin mensual exclusiva</span>
+                    <User className={`w-4 h-4 ${selectedPlan === index ? 'text-yellow-400' : 'text-yellow-500'}`} />
+                    <span>{t.exclusiveSkin}</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className={`w-4 h-4 rounded-full ${selectedPlan === index ? 'bg-cyan-300' : 'bg-cyan-500'}`} />
-                    <span>1000 V-Bucks mensuales</span>
+                    <Coins className={`w-4 h-4 rounded-full ${selectedPlan === index ? 'bg-cyan-300' : 'bg-cyan-500'}`} />
+                    <span>{t.monthlyVBucks}</span>
                   </li>
                 </ul>
               </div>
@@ -122,20 +127,20 @@ const Crew = () => {
             "
           >
             <ShoppingCart className="w-5 h-5" />
-            Comprar Plan de {plans[selectedPlan].duration}
+            {t.buyPlan} {plans[selectedPlan].duration} {plans[selectedPlan].duration === 1 ? t.month : t.months}
           </button>
           <p className="text-sm text-gray-500 mt-4">
-            * La suscripción se renueva automáticamente al finalizar el periodo. Puedes cancelar en cualquier momento.
+            * {t.subscriptionNote}
           </p>
         </div>
 
         {/* Sección de Beneficios Exclusivos */}
         <div className="mt-24 mb-16">
           <h2 className="text-4xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-600">
-            Beneficios Exclusivos
+            {t.exclusiveBenefits}
           </h2>
           <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
-            Únete al Crew de Fortnite y obtén acceso a contenido exclusivo, recompensas mensuales y mucho más
+            {t.joinCrewDescription}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -144,9 +149,9 @@ const Crew = () => {
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <User className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Skin Mensual Exclusiva</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">{t.exclusiveSkin}</h3>
               <p className="text-gray-600">
-                Recibe cada mes una skin única y exclusiva que solo los miembros del Crew pueden obtener. ¡Destaca en el campo de batalla!
+                {t.joinCrewDescription}
               </p>
             </div>
 
@@ -155,9 +160,9 @@ const Crew = () => {
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <Coins className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4">1,000 V-Bucks Mensuales</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">{t.monthlyVBucks}</h3>
               <p className="text-gray-600">
-                Obtén 1,000 V-Bucks cada mes para gastar en el objeto que quieras de la tienda. ¡Personaliza tu experiencia al máximo!
+                {t.joinCrewDescription}
               </p>
             </div>
 

@@ -3,6 +3,8 @@ import { getDailyShop } from '../services/fortniteApi';
 import { Filter, ChevronDown, ChevronUp, Loader2, ShoppingCart, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLocation } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations';
 
 interface ShopItem {
   mainId: string;
@@ -36,6 +38,8 @@ const FortniteShop: React.FC = () => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const location = useLocation();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   // Estados para los filtros
   const [rarityFilters, setRarityFilters] = useState<string[]>([]);
@@ -65,7 +69,7 @@ const FortniteShop: React.FC = () => {
       setFilteredItems(data);
       setLoading(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar los items');
+      setError(err instanceof Error ? err.message : t.errorLoadingItems);
       setLoading(false);
     }
   };
@@ -132,7 +136,7 @@ const FortniteShop: React.FC = () => {
       setShowNotification(true);
       setTimeout(() => setShowNotification(false), 2000);
     } else {
-      setErrorMessage(result.message || '');
+      setErrorMessage(result.message || t.addToCartError);
       setShowErrorMessage(true);
       setTimeout(() => setShowErrorMessage(false), 3000);
     }
@@ -143,7 +147,7 @@ const FortniteShop: React.FC = () => {
       <div className="min-h-screen bg-[#FAFAFA] pt-24 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-primary-600 animate-spin mx-auto" />
-          <p className="mt-4 text-gray-600">Cargando tienda...</p>
+          <p className="mt-4 text-gray-600">{t.loadingShop}</p>
         </div>
       </div>
     );
@@ -158,7 +162,7 @@ const FortniteShop: React.FC = () => {
             onClick={() => window.location.reload()} 
             className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
-            Reintentar
+            {t.retry}
           </button>
         </div>
       </div>
@@ -178,7 +182,7 @@ const FortniteShop: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <Filter className="w-5 h-5 text-primary-600" />
-                <span className="font-medium">Rareza</span>
+                <span className="font-medium">{t.rarity}</span>
               </div>
               {isRarityOpen ? (
                 <ChevronUp className="w-5 h-5" />
@@ -221,7 +225,7 @@ const FortniteShop: React.FC = () => {
             >
               <div className="flex items-center gap-3">
                 <Filter className="w-5 h-5 text-primary-600" />
-                <span className="font-medium">Filtrar por Precio</span>
+                <span className="font-medium">{t.filterByPrice}</span>
               </div>
               {isPriceFilterOpen ? (
                 <ChevronUp className="w-5 h-5" />
@@ -234,8 +238,8 @@ const FortniteShop: React.FC = () => {
               <div className="p-6">
                 <div className="space-y-6">
                   <div className="flex justify-between text-sm text-gray-600">
-                    <span>{priceRange.min} V-Bucks</span>
-                    <span>{priceRange.max} V-Bucks</span>
+                    <span>{priceRange.min} {t.vbucks}</span>
+                    <span>{priceRange.max} {t.vbucks}</span>
                   </div>
                   <input
                     type="range"
@@ -259,7 +263,7 @@ const FortniteShop: React.FC = () => {
             <div className="fixed bottom-4 right-4 bg-primary-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in">
               <div className="flex items-center gap-2">
                 <ShoppingCart className="w-5 h-5" />
-                <span>{lastAddedItem} agregado al carrito</span>
+                <span>{lastAddedItem} {t.addedToCart}</span>
               </div>
             </div>
           )}
@@ -298,7 +302,7 @@ const FortniteShop: React.FC = () => {
                   </div>
                   <div className="mt-4 flex items-center justify-between">
                     <p className="text-lg font-medium text-primary-600">
-                      {item.price.finalPrice} V-Bucks
+                      {item.price.finalPrice} {t.vbucks}
                     </p>
                     <button
                       onClick={() => handleAddToCart(item)}
@@ -308,8 +312,8 @@ const FortniteShop: React.FC = () => {
                           : 'text-primary-600 hover:bg-primary-50'
                       }`}
                       title={hasItems && getItemQuantity(item.mainId) === 0 
-                        ? "No es posible enviar dos regalos simultáneamente"
-                        : "Agregar al carrito"}
+                        ? t.cantSendMultipleGifts
+                        : t.addToCart}
                       disabled={hasItems && getItemQuantity(item.mainId) === 0}
                     >
                       <ShoppingCart className="w-5 h-5" />
@@ -328,7 +332,7 @@ const FortniteShop: React.FC = () => {
           {filteredItems.length === 0 && !loading && (
             <div className="text-center py-12">
               <p className="text-gray-600">
-                No se encontraron items para los filtros seleccionados.
+                {t.noItemsFound}
               </p>
             </div>
           )}

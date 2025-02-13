@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { ChevronRight, Star, TrendingUp, Zap, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getDailyShop, FortniteItem } from '../services/fortniteApi';
+import { useLanguage } from '../context/LanguageContext';
+import { translations } from '../translations';
+import LanguageSelector from './LanguageSelector';
 
 const Home = () => {
   const [featuredItems, setFeaturedItems] = useState<FortniteItem[]>([]);
   const [latestItems, setLatestItems] = useState<FortniteItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const fetchFeaturedItems = async () => {
@@ -57,34 +61,32 @@ const Home = () => {
     return item.displayAssets?.[0]?.background || '';
   };
 
+  const t = translations[language];
+
   return (
     <div className="min-h-screen bg-black">
+      <LanguageSelector />
+      
       {/* Hero Section - Modernizado */}
       <section className="relative h-screen w-full flex items-center overflow-hidden hero-background">
         <div className="absolute inset-0 hero-overlay"></div>
         <div className="w-full max-w-[1440px] mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
             <h1 className="text-7xl md:text-8xl font-bold text-white mb-8 leading-tight">
-              Tus items y<br/>
-              accesorios<br/>
-              <span className="text-primary-400">Definitivos</span>
+              {t.heroTitle}
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-12 leading-relaxed">
-              Consigue los mejores ítems de Fortnite hoy mismo. <br/>
-              Skins y accesorios exclusivos para ganar tus partidas.
+              {t.heroSubtitle}<br/>
+              {t.heroDescription}
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
                 to="/fortnite-shop"
-                className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105"
+                className="px-12 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105"
               >
                 <ShoppingCart className="w-5 h-5" />
-                Explorar Tienda
+                {t.exploreStore}
               </Link>
-              <button className="px-8 py-4 bg-black/30 hover:bg-black/40 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105">
-                Ver Ofertas
-                <ChevronRight className="w-5 h-5" />
-              </button>
             </div>
           </div>
         </div>
@@ -94,9 +96,9 @@ const Home = () => {
       <section className="py-24 relative bg-gradient-to-b from-gray-100 via-[#D9DBDF] to-[#D9DBDF]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Items Destacados de Fortnite</h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t.featuredItems}</h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Explora nuestra selección de items más populares y exclusivos
+              {t.featuredDescription}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
@@ -132,7 +134,7 @@ const Home = () => {
                           className="w-full px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2"
                         >
                           <ShoppingCart className="w-5 h-5" />
-                          Ver en Tienda
+                          {t.viewInStore}
                         </Link>
                       </div>
                     </div>
@@ -148,7 +150,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };
