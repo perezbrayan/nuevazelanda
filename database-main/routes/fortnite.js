@@ -144,10 +144,9 @@ router.post('/orders', upload.single('payment_receipt'), async (req, res) => {
             updated_at: new Date()
         };
 
-        // Guardar el archivo si existe, pero no intentar guardarlo en la base de datos
+        // Guardar el archivo si existe
         if (req.file) {
             console.log('Archivo de comprobante recibido:', req.file.filename);
-            // El archivo ya está guardado por multer, no necesitamos hacer nada más
         }
 
         console.log('Creando orden con datos:', orderData);
@@ -171,10 +170,14 @@ router.post('/orders', upload.single('payment_receipt'), async (req, res) => {
 
         console.log('Orden recuperada de la base de datos:', order);
 
+        // Enviar respuesta exitosa
         res.json({
             success: true,
             data: {
-                order,
+                order: {
+                    ...order,
+                    message: '¡Orden creada exitosamente! Tu pedido está siendo procesado.'
+                },
                 message: 'Orden creada exitosamente',
                 payment_receipt: req.file ? `/payment-receipt/${req.file.filename}` : null
             },
@@ -189,7 +192,7 @@ router.post('/orders', upload.single('payment_receipt'), async (req, res) => {
         console.error('Stack trace:', error.stack);
         res.status(500).json({
             success: false,
-            error: 'Error al crear la orden',
+            error: 'Error al crear la orden. Por favor, intente nuevamente.',
             details: error.message,
             timestamp: new Date().toISOString()
         });

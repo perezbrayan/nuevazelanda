@@ -354,9 +354,24 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [orderMessage, setOrderMessage] = useState('');
   const { language } = useLanguage();
   const t = translations[language];
   const mounted = React.useRef(true);
+
+  // Verificar conexión al montar el componente
+  React.useEffect(() => {
+    const verifyConnection = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/db/api/health`);
+        console.log('Estado del servidor:', response.data);
+      } catch (error) {
+        console.error('Error al verificar conexión:', error);
+      }
+    };
+
+    verifyConnection();
+  }, []);
 
   React.useEffect(() => {
     return () => {
@@ -368,11 +383,13 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
     if (processing) return;
 
     try {
+      console.log('Iniciando proceso de pago...');
       setProcessing(true);
       setError('');
       setSuccess(false);
       
       if (!item.offerId || !item.displayName || !item.price?.finalPrice || !username) {
+        console.log('Faltan campos requeridos:', { item, username });
         setError(t.requiredFields);
         setProcessing(false);
         return;
@@ -386,10 +403,16 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
       
       const paymentProofFile = localStorage.getItem('paymentProof');
       if (paymentProofFile) {
+        console.log('Procesando comprobante de pago...');
         const response = await fetch(paymentProofFile);
         const blob = await response.blob();
         formData.append('payment_receipt', blob, 'payment_receipt.jpg');
       }
+
+      console.log('Enviando solicitud al servidor...', {
+        url: `${import.meta.env.VITE_API_URL}/db/api/fortnite/orders`,
+        formData: Object.fromEntries(formData.entries())
+      });
 
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/db/api/fortnite/orders`, formData, {
         headers: {
@@ -397,39 +420,54 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
         },
       });
 
-      localStorage.removeItem('paymentProof');
+      console.log('Respuesta del servidor recibida:', response.data);
 
       if (mounted.current) {
+        console.log('Componente montado, procesando respuesta...');
+        
         if (response.data.success) {
+          console.log('Orden creada exitosamente, actualizando estados...');
+          // Primero establecemos el mensaje y luego el éxito
+          const successMessage = response.data.data.message || t.orderProcessing;
+          console.log('Mensaje de éxito:', successMessage);
+          
+          setOrderMessage(successMessage);
           setSuccess(true);
           setProcessing(false);
-          
+          localStorage.removeItem('paymentProof');
+
+          console.log('Estados actualizados, iniciando redirección...');
           setTimeout(() => {
             if (mounted.current) {
+              console.log('Redirigiendo a la página principal...');
               navigate('/', { 
                 state: { 
-                  message: t.orderProcessing,
+                  message: successMessage,
                   type: 'success'
                 }
               });
             }
           }, 3000);
         } else {
-          setError(t.orderError);
+          console.log('Error en la respuesta:', response.data.error);
           setProcessing(false);
+          setError(response.data.error || t.orderError);
         }
       }
     } catch (error: unknown) {
       console.error('Error al crear orden:', error);
-      if (error instanceof Error) {
-        console.error('Detalles del error:', (error as any).response?.data);
-        if (mounted.current) {
-          setError(
-            ((error as any).response?.data?.error as string) || 
-            t.orderError
-          );
-          setProcessing(false);
-        }
+      console.error('Detalles del error:', {
+        message: (error as any).message,
+        response: (error as any).response?.data,
+        status: (error as any).response?.status
+      });
+      
+      if (mounted.current) {
+        setProcessing(false);
+        setError(
+          ((error as any).response?.data?.error as string) || 
+          t.orderError
+        );
       }
     }
   };
@@ -439,7 +477,7 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
       <h2 className="text-xl font-semibold">{t.confirmOrder}</h2>
       
       {success && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
           <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
@@ -456,7 +494,7 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
                   <p className="text-gray-600"><span className="font-medium">{t.status}:</span> <span className="text-primary-600">{t.processing}</span></p>
                 </div>
               </div>
-              <p className="text-gray-600 mb-2">{t.orderProcessing}</p>
+              <p className="text-gray-600 mb-2">{orderMessage}</p>
               <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mt-4">
                 <div className="w-1/3 h-full bg-primary-600 animate-[progress_3s_ease-in-out_infinite]"></div>
               </div>
