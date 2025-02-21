@@ -66,7 +66,7 @@ const Bot: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${apiConfig.botURL}/bot2/api/send-friend-request`, {
+      const response = await fetch(`${apiConfig.botURL}/bot2/api/friend-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,8 @@ const Bot: React.FC = () => {
         },
         body: JSON.stringify({
           username,
-          botId: 1
+          botId: 'bot1',
+          sendFromAllBots: true
         })
       });
 

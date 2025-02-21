@@ -261,23 +261,37 @@ const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => 
       <div className="max-w-xl mx-auto">
         <div className="bg-blue-50 p-6 rounded-xl mb-8">
           <h3 className="text-lg font-semibold text-blue-900 mb-4">{t.bankDetails}</h3>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium text-blue-900">{t.bank}</p>
-              <p className="text-blue-800">Banco Internacional del Perú - Interbank</p>
+          <div className="space-y-6">
+            {/* BANRURAL */}
+            <div className="p-4 bg-white rounded-lg">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-blue-900">BANRURAL</p>
+                <p className="text-blue-800">Cuenta Monetaria</p>
+                <p className="text-blue-800">No. de cuenta: 03103500001370</p>
+                <p className="text-blue-800">A nombre de: Jose Martínez</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-blue-900">{t.accountNumber}</p>
-              <p className="text-blue-800">123-456789-012</p>
+
+            {/* G&T CONTINENTAL */}
+            <div className="p-4 bg-white rounded-lg">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-blue-900">BANCO G&T CONTINENTAL</p>
+                <p className="text-blue-800">Cuenta Monetaria</p>
+                <p className="text-blue-800">No. de cuenta: 039-0019192-5</p>
+                <p className="text-blue-800">A nombre de: Jose Martínez</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-blue-900">{t.accountHolder}</p>
-              <p className="text-blue-800">Game Store S.A.C.</p>
+
+            {/* BANCO INDUSTRIAL */}
+            <div className="p-4 bg-white rounded-lg">
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-blue-900">BANCO INDUSTRIAL</p>
+                <p className="text-blue-800">Cuenta de ahorro</p>
+                <p className="text-blue-800">No. de cuenta: 0525075</p>
+                <p className="text-blue-800">A nombre de: Jose Martínez</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-blue-900">RUC</p>
-              <p className="text-blue-800">20123456789</p>
-            </div>
+
             <div className="pt-4">
               <p className="text-sm text-blue-700">
                 <strong>{t.uploadRequired}</strong>
