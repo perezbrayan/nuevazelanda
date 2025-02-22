@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingCart, Search, User, Gamepad2, Home, Gift, Sparkles, Tag, Trash2, MessageSquare, Users, LogOut, Globe } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, Gamepad2, Home, Gift, Sparkles, Tag, Trash2, MessageSquare, Users, LogOut, Globe } from 'lucide-react';
 import logo from '../assets/logo.svg';
 import { useCart } from '../context/CartContext';
 import { useClickOutside } from '../hooks/useClickOutside';
@@ -32,23 +32,11 @@ const NavLink = ({ to, icon, children }: NavLinkProps) => {
   );
 };
 
-const SearchBar = () => {
-  const { language } = useLanguage();
-  const t = translations[language];
-  
-  return (
-    <div className="relative flex-1 max-w-xl">
-      <input
-        type="text"
-        placeholder={t.search}
-        className="w-full px-4 py-2.5 pl-11 rounded-xl border border-gray-200 focus:border-primary-600 focus:ring-2 focus:ring-primary-100 focus:outline-none transition-all duration-200"
-      />
-      <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-    </div>
-  );
-};
+interface UserDropdownProps {
+  isOpen: boolean;
+}
 
-const UserDropdown = ({ isOpen }) => {
+const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen }) => {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const t = translations[language];
@@ -259,30 +247,27 @@ const Navbar = () => {
     <header className="w-full fixed top-0 z-50 bg-white/80 backdrop-blur-md shadow-md">
       <nav className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex-shrink-0 flex items-center gap-1.5"
-          >
-            <img src={logo} alt="GameStore" className="h-8 w-auto" />
-          </Link>
+          {/* Logo and Navigation Links */}
+          <div className="flex items-center gap-6">
+            <Link 
+              to="/" 
+              className="flex-shrink-0 flex items-center gap-1.5"
+            >
+              <img src={logo} alt="GameStore" className="h-8 w-auto" />
+            </Link>
 
-          {/* Search Bar - Centered */}
-          <div className="hidden lg:flex flex-1 justify-center mx-6">
-            <SearchBar />
-          </div>
-
-          {/* Desktop Navigation and Actions - Right Side */}
-          <div className="hidden lg:flex items-center gap-3">
-            {/* Navigation Links */}
-            <div className="flex items-center gap-1">
+            {/* Navigation Links - Moved here */}
+            <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <NavLink key={link.to} to={link.to} icon={link.icon}>
                   {link.label}
                 </NavLink>
               ))}
             </div>
-            
+          </div>
+
+          {/* Desktop Actions - Right Side */}
+          <div className="hidden lg:flex items-center gap-3">
             {/* Language Selector with Dropdown */}
             <div className="relative" ref={languageDropdownRef}>
               <button 
@@ -353,9 +338,6 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="lg:hidden py-4 border-t border-gray-100">
             <div className="space-y-2">
-              <div className="px-2 pb-4">
-                <SearchBar />
-              </div>
               {navLinks.map((link) => (
                 <NavLink key={link.to} to={link.to} icon={link.icon}>
                   {link.label}
