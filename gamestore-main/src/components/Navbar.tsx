@@ -217,24 +217,30 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onRemoveItem }) => 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isUserOpen, setIsUserOpen] = useState(false);
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const { items: cartItems, removeItem, isOpen: isCartOpen, toggleCart, closeCart } = useCart();
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
   
   const cartDropdownRef = useRef<HTMLDivElement>(null);
-  const userDropdownRef = useRef<HTMLDivElement>(null);
   const languageDropdownRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(cartDropdownRef, () => closeCart());
-  useClickOutside(userDropdownRef, () => setIsUserOpen(false));
   useClickOutside(languageDropdownRef, () => setIsLanguageOpen(false));
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const userJson = localStorage.getItem('user');
+  const user = userJson ? JSON.parse(userJson) : null;
 
   const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/');
+    window.location.reload();
+  };
 
   const navLinks = [
     { to: "/", icon: <Home className="w-5 h-5" />, label: t.home },
@@ -256,7 +262,7 @@ const Navbar = () => {
               <img src={logo} alt="GameStore" className="h-8 w-auto" />
             </Link>
 
-            {/* Navigation Links - Moved here */}
+            {/* Navigation Links */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <NavLink key={link.to} to={link.to} icon={link.icon}>
@@ -268,44 +274,22 @@ const Navbar = () => {
 
           {/* Desktop Actions - Right Side */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Language Selector with Dropdown */}
+            {/* Language Selector */}
             <div className="relative" ref={languageDropdownRef}>
               <button 
                 className="p-2 hover:bg-gray-50/50 rounded-lg transition-all duration-300"
-                onClick={() => {
-                  setIsLanguageOpen(!isLanguageOpen);
-                  setIsUserOpen(false);
-                  closeCart();
-                }}
+                onClick={() => setIsLanguageOpen(!isLanguageOpen)}
               >
                 <Globe className="w-5 h-5 text-gray-600" />
               </button>
               <LanguageDropdown isOpen={isLanguageOpen} />
             </div>
-            
-            {/* User Menu with Dropdown */}
-            <div className="relative" ref={userDropdownRef}>
-              <button 
-                className="p-2 hover:bg-gray-50/50 rounded-lg transition-all duration-300"
-                onClick={() => {
-                  setIsUserOpen(!isUserOpen);
-                  setIsLanguageOpen(false);
-                  closeCart();
-                }}
-              >
-                <User className="w-5 h-5 text-gray-600" />
-              </button>
-              <UserDropdown isOpen={isUserOpen} />
-            </div>
-            
+
             {/* Cart Button with Dropdown */}
             <div className="relative" ref={cartDropdownRef}>
               <button 
                 className="p-2 hover:bg-gray-50/50 rounded-lg transition-all duration-300 relative"
-                onClick={() => {
-                  toggleCart();
-                  setIsUserOpen(false);
-                }}
+                onClick={toggleCart}
               >
                 <ShoppingCart className="w-5 h-5 text-gray-600" />
                 {cartCount > 0 && (
@@ -319,6 +303,40 @@ const Navbar = () => {
                 onRemoveItem={removeItem}
               />
             </div>
+            
+            {/* User Actions */}
+            {user ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary-600" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{user.username}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>{t.logout}</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link 
+                  to="/login"
+                  className="px-4 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                >
+                  {t.login}
+                </Link>
+                <Link 
+                  to="/register"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                >
+                  {t.register}
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -343,6 +361,41 @@ const Navbar = () => {
                   {link.label}
                 </NavLink>
               ))}
+              
+              {/* Mobile Auth Buttons */}
+              {!user ? (
+                <div className="border-t border-gray-100 mt-4 pt-4 space-y-2">
+                  <Link 
+                    to="/login"
+                    className="flex items-center gap-2 px-4 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors w-full"
+                  >
+                    {t.login}
+                  </Link>
+                  <Link 
+                    to="/register"
+                    className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors w-full"
+                  >
+                    {t.register}
+                  </Link>
+                </div>
+              ) : (
+                <div className="border-t border-gray-100 mt-4 pt-4">
+                  <div className="px-4 py-2 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
+                      <User className="w-5 h-5 text-primary-600" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">{user.username}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors mt-2"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span>{t.logout}</span>
+                  </button>
+                </div>
+              )}
+
               {/* Language Selector for Mobile */}
               <div className="border-t border-gray-100 mt-4 pt-4">
                 <div className="px-4 py-2 text-gray-600">
@@ -363,19 +416,6 @@ const Navbar = () => {
                     ))}
                   </div>
                 </div>
-              </div>
-              <div className="border-t border-gray-100 mt-4 pt-4">
-                <button
-                  onClick={() => {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.reload();
-                  }}
-                  className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span>{t.logout}</span>
-                </button>
               </div>
             </div>
           </div>
