@@ -37,19 +37,19 @@ const Crew = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <div className="min-h-screen bg-[#003554]">
       {/* Hero Section */}
       <div className="relative pt-32 pb-20 px-4">
         <div className="absolute inset-0 bg-[url('/circuit-pattern.png')] opacity-5"></div>
         <div className="max-w-7xl mx-auto relative">
           <div className="text-center">
-            <div className="inline-block p-3 bg-primary-100 rounded-2xl mb-6">
-              <Crown className="w-12 h-12 text-primary-600" />
+            <div className="inline-block p-3 bg-primary-500/20 rounded-2xl mb-6">
+              <Crown className="w-12 h-12 text-primary-400" />
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-primary-900 mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               {t.choosePlan}
             </h1>
-            <p className="text-xl text-primary-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               {t.joinCrewDescription}
             </p>
           </div>
@@ -67,42 +67,42 @@ const Crew = () => {
                 onClick={() => setSelectedPlan(index)}
                 className="group cursor-pointer"
               >
-                <div className={`relative bg-white rounded-2xl p-8 border transition-all duration-300 h-full shadow-lg
+                <div className={`relative bg-[#051923] rounded-2xl p-8 border transition-all duration-300 h-full shadow-lg
                   ${selectedPlan === index 
-                    ? 'border-primary-500 shadow-xl scale-105' 
-                    : 'border-primary-100 hover:border-primary-200 hover:shadow-xl'
+                    ? 'border-primary-400 shadow-xl scale-105' 
+                    : 'border-primary-500/20 hover:border-primary-500/40'
                   }`}
                 >
                   {selectedPlan === index && (
-                    <div className="absolute -top-3 -right-3 bg-primary-600 text-white text-xs py-1 px-3 rounded-full">
+                    <div className="absolute -top-3 -right-3 bg-primary-500 text-white text-xs py-1 px-3 rounded-full">
                       {t.selected}
                     </div>
                   )}
                   
                   <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-primary-900">
+                    <h3 className="text-2xl font-bold text-white">
                       {plan.duration} {plan.duration === 1 ? t.month : t.months}
                     </h3>
-                    <div className="text-3xl font-bold text-primary-600 mt-2">
+                    <div className="text-3xl font-bold text-primary-400 mt-2">
                       COP {plan.price.toLocaleString()}
                     </div>
-                    <div className="text-sm text-primary-500 mt-1">
+                    <div className="text-sm text-gray-300 mt-1">
                       COP {plan.monthlyPrice.toLocaleString()} {t.perMonth}
                     </div>
                     {plan.savings > 0 && (
-                      <div className="text-sm font-medium text-green-500 mt-2">
+                      <div className="text-sm font-medium text-green-400 mt-2">
                         {t.youSave} COP {plan.savings.toLocaleString()}
                       </div>
                     )}
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-primary-700">
-                      <User className="w-5 h-5 text-primary-500" />
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <User className="w-5 h-5 text-primary-400" />
                       <span>{t.exclusiveSkin}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-primary-700">
-                      <Coins className="w-5 h-5 text-primary-500" />
+                    <div className="flex items-center gap-2 text-gray-300">
+                      <Coins className="w-5 h-5 text-primary-400" />
                       <span>{t.monthlyVBucks}</span>
                     </div>
                   </div>
@@ -113,11 +113,11 @@ const Crew = () => {
 
           {/* Botón de Compra */}
           <div className="text-center space-y-4">
-            <button className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-primary-600/20 flex items-center gap-2 mx-auto">
+            <button className="px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold text-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-primary-500/20 flex items-center gap-2 mx-auto">
               <ShoppingCart className="w-5 h-5" />
               <span>{t.buyPlan} {plans[selectedPlan].duration} {plans[selectedPlan].duration === 1 ? t.month : t.months}</span>
             </button>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-400">
               * {t.subscriptionNote}
             </p>
           </div>
@@ -125,10 +125,10 @@ const Crew = () => {
           {/* Beneficios */}
           <div className="mt-24">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-primary-900 mb-4">
+              <h2 className="text-4xl font-bold text-white mb-4">
                 {t.exclusiveBenefits}
               </h2>
-              <p className="text-lg text-primary-600 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
                 {t.joinCrewDescription}
               </p>
             </div>
@@ -167,14 +167,14 @@ const Crew = () => {
                 }
               ].map((benefit, index) => (
                 <div key={index} className="group">
-                  <div className="relative bg-white rounded-2xl p-6 border border-primary-100 shadow-lg transition-all duration-300 hover:shadow-xl hover:border-primary-200 h-full">
-                    <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
-                      <div className="text-primary-600">
+                  <div className="relative bg-[#051923] rounded-2xl p-6 border border-primary-500/20 shadow-lg transition-all duration-300 hover:border-primary-500/40 h-full">
+                    <div className="w-12 h-12 bg-primary-500/20 rounded-xl flex items-center justify-center mb-4">
+                      <div className="text-primary-400">
                         {benefit.icon}
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-primary-900 mb-3">{benefit.title}</h3>
-                    <p className="text-primary-600">{benefit.description}</p>
+                    <h3 className="text-xl font-bold text-white mb-3">{benefit.title}</h3>
+                    <p className="text-gray-300">{benefit.description}</p>
                   </div>
                 </div>
               ))}

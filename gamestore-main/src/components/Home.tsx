@@ -72,9 +72,10 @@ const Home = () => {
         <div className="absolute inset-0 hero-overlay"></div>
         <div className="w-full max-w-[1440px] mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="text-7xl md:text-8xl font-bold text-white mb-8 leading-tight">
-              {t.heroTitle}
-            </h1>
+            <h1 
+              className="text-7xl md:text-8xl font-bold text-white mb-8 leading-tight"
+              dangerouslySetInnerHTML={{ __html: t.heroTitle }}
+            />
             <p className="text-xl md:text-2xl text-gray-200 mb-12 leading-relaxed">
               {t.heroSubtitle}<br/>
               {t.heroDescription}
@@ -93,11 +94,11 @@ const Home = () => {
       </section>
 
       {/* Featured Fortnite Items - Renovado */}
-      <section className="py-24 relative bg-gradient-to-b from-gray-100 via-[#D9DBDF] to-[#D9DBDF]">
+      <section className="py-24 relative bg-[#1B2156]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t.featuredItems}</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-white mb-4">{t.featuredItems}</h2>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
               {t.featuredDescription}
             </p>
           </div>
@@ -105,16 +106,16 @@ const Home = () => {
             {loading ? (
               Array(4).fill(0).map((_, index) => (
                 <div key={index} className="animate-pulse">
-                  <div className="bg-gray-200 h-80 rounded-2xl mb-4"></div>
-                  <div className="bg-gray-200 h-6 w-3/4 rounded mb-2"></div>
-                  <div className="bg-gray-200 h-4 w-1/2 rounded mb-2"></div>
-                  <div className="bg-gray-200 h-4 w-1/4 rounded"></div>
+                  <div className="bg-gray-700/20 h-80 rounded-2xl mb-4"></div>
+                  <div className="bg-gray-700/20 h-6 w-3/4 rounded mb-2"></div>
+                  <div className="bg-gray-700/20 h-4 w-1/2 rounded mb-2"></div>
+                  <div className="bg-gray-700/20 h-4 w-1/4 rounded"></div>
                 </div>
               ))
             ) : (
               featuredItems.map((item) => (
                 <div key={item.mainId} className="group">
-                  <div className="relative overflow-hidden rounded-2xl mb-4 bg-gray-50">
+                  <div className="relative overflow-hidden rounded-2xl mb-4 bg-gray-800/30">
                     {getBestImage(item) ? (
                       <img 
                         src={getBestImage(item)}
@@ -123,8 +124,8 @@ const Home = () => {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-80 bg-gray-100 flex items-center justify-center p-4 text-center">
-                        <span className="text-gray-800 font-semibold">{item.displayName}</span>
+                      <div className="w-full h-80 bg-gray-800/30 flex items-center justify-center p-4 text-center">
+                        <span className="text-gray-300 font-semibold">{item.displayName}</span>
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -139,11 +140,11 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-primary-600 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary-400 transition-colors duration-300">
                     {item.displayName}
                   </h3>
-                  <p className="text-gray-600 mb-2">{item.mainType}</p>
-                  <p className="text-primary-600 font-bold text-lg">{item.price.finalPrice} V-Bucks</p>
+                  <p className="text-gray-400 mb-2">{item.mainType}</p>
+                  <p className="text-primary-400 font-bold text-lg">{item.price.finalPrice} V-Bucks</p>
                 </div>
               ))
             )}

@@ -25,7 +25,7 @@ export const translations = {
     allRightsReserved: 'Todos los derechos reservados',
 
     // Home
-    heroTitle: 'Tus items y accesorios Definitivos',
+    heroTitle: 'Tus <span className="text-[#38bdf8]">items</span> y <span className="text-[#0ea5e9]">accesorios</span> Definitivos',
     heroSubtitle: 'Consigue los mejores ítems de Fortnite hoy mismo.',
     heroDescription: 'Skins y accesorios exclusivos para ganar tus partidas.',
     exploreStore: 'Explorar Tienda',
@@ -162,7 +162,7 @@ export const translations = {
     allRightsReserved: 'All rights reserved',
 
     // Home
-    heroTitle: 'Your Definitive items and accessories',
+    heroTitle: 'Your Definitive <span className="text-[#38bdf8]">items</span> and <span className="text-[#0ea5e9]">accessories</span>',
     heroSubtitle: 'Get the best Fortnite items today.',
     heroDescription: 'Exclusive skins and accessories to win your matches.',
     exploreStore: 'Explore Store',
@@ -299,7 +299,7 @@ export const translations = {
     allRightsReserved: '版權所有',
 
     // Home
-    heroTitle: '您的終極物品和配件',
+    heroTitle: '您的終極 <span className="text-[#38bdf8]">物品</span> 和 <span className="text-[#0ea5e9]">配件</span>',
     heroSubtitle: '立即獲取最好的要塞英雄物品。',
     heroDescription: '獨家皮膚和配件助您贏得比賽。',
     exploreStore: '探索商店',

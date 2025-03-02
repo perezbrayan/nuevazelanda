@@ -64,7 +64,7 @@ const CheckoutSteps = ({ currentStep, isAuthenticated }: { currentStep: number, 
                     ? 'bg-primary-600 text-white'
                     : isCompleted
                     ? 'bg-green-500 text-white'
-                    : 'bg-gray-100 text-gray-500'
+                    : 'bg-gray-700 text-white'
                 }`}
               >
                 {isCompleted ? (
@@ -74,13 +74,13 @@ const CheckoutSteps = ({ currentStep, isAuthenticated }: { currentStep: number, 
                 )}
               </div>
               <div className="mt-2 text-center">
-                <div className="text-sm font-medium text-gray-900">{step.title}</div>
-                <div className="text-xs text-gray-500">{step.description}</div>
+                <div className="text-sm font-medium text-white">{step.title}</div>
+                <div className="text-xs text-gray-300">{step.description}</div>
               </div>
               {index < steps.length - 1 && (
                 <div
                   className={`absolute top-5 left-1/2 w-full h-0.5 ${
-                    currentStep > index + 1 ? 'bg-green-500' : 'bg-gray-200'
+                    currentStep > index + 1 ? 'bg-green-500' : 'bg-gray-700'
                   }`}
                 />
               )}
@@ -108,10 +108,10 @@ const OrderSummary = ({ item, onContinue }: OrderSummaryProps) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">{t.productDetails}</h2>
+      <h2 className="text-2xl font-bold text-white mb-8">{t.productDetails}</h2>
       <div className="flex gap-8 mb-8">
         <div className="w-1/3">
-          <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100">
+          <div className="aspect-square rounded-2xl overflow-hidden bg-[#051923]">
             <img
               src={item.image}
               alt={item.displayName}
@@ -120,24 +120,24 @@ const OrderSummary = ({ item, onContinue }: OrderSummaryProps) => {
           </div>
         </div>
         <div className="flex-1">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">{item.displayName}</h3>
+          <h3 className="text-xl font-semibold text-white mb-4">{item.displayName}</h3>
           <div className="space-y-3 mb-6">
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-gray-300">
               <Gift className="w-5 h-5 text-primary-500" />
               <span>{t.specialGift}</span>
             </div>
-            <p className="text-gray-600">{t.quantity}: 1</p>
+            <p className="text-gray-300">{t.quantity}: 1</p>
             <div className="flex items-center gap-2">
-              <span className="text-3xl font-bold text-primary-600">{item.price.finalPrice}</span>
-              <span className="text-gray-500">{t.vbucks}</span>
+              <span className="text-3xl font-bold text-primary-400">{item.price.finalPrice}</span>
+              <span className="text-gray-300">{t.vbucks}</span>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center pt-6 border-t border-gray-100">
+      <div className="flex justify-between items-center pt-6 border-t border-gray-700">
         <button
           onClick={handleBack}
-          className="px-6 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+          className="px-6 py-2 text-gray-300 hover:text-white transition-colors"
         >
           {t.backToStore}
         </button>
@@ -169,10 +169,10 @@ const UserInformation = ({ onContinue, onBack }: UserInformationProps) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">{t.userInformation}</h2>
+      <h2 className="text-2xl font-bold text-white mb-8">{t.userInformation}</h2>
       <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-6">
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
             {t.fortniteUsername}
           </label>
           <input
@@ -180,12 +180,12 @@ const UserInformation = ({ onContinue, onBack }: UserInformationProps) => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-[#051923] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all placeholder-gray-500"
             placeholder={t.enterFortniteUsername}
           />
           {error && (
-            <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-              <span className="inline-block w-1 h-1 rounded-full bg-red-600" />
+            <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
+              <span className="inline-block w-1 h-1 rounded-full bg-red-400" />
               {error}
             </p>
           )}
@@ -194,7 +194,7 @@ const UserInformation = ({ onContinue, onBack }: UserInformationProps) => {
           <button
             type="button"
             onClick={onBack}
-            className="px-6 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="px-6 py-2 text-gray-300 hover:text-white transition-colors"
           >
             {t.back}
           </button>
@@ -257,43 +257,43 @@ const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => 
 
   return (
     <div className="mt-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">{t.paymentInformation}</h2>
+      <h2 className="text-2xl font-bold text-white mb-8">{t.paymentInformation}</h2>
       <div className="max-w-xl mx-auto">
-        <div className="bg-blue-50 p-6 rounded-xl mb-8">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">{t.bankDetails}</h3>
+        <div className="bg-[#051923] p-6 rounded-xl mb-8">
+          <h3 className="text-lg font-semibold text-white mb-4">{t.bankDetails}</h3>
           <div className="space-y-6">
             {/* BANRURAL */}
-            <div className="p-4 bg-white rounded-lg">
+            <div className="p-4 bg-[#051923] border border-gray-700 rounded-lg">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-blue-900">BANRURAL</p>
-                <p className="text-blue-800">Cuenta Monetaria</p>
-                <p className="text-blue-800">No. de cuenta: 03103500001370</p>
-                <p className="text-blue-800">A nombre de: Jose Martínez</p>
+                <p className="text-sm font-medium text-white">BANRURAL</p>
+                <p className="text-gray-300">Cuenta Monetaria</p>
+                <p className="text-gray-300">No. de cuenta: 03103500001370</p>
+                <p className="text-gray-300">A nombre de: Jose Martínez</p>
               </div>
             </div>
 
             {/* G&T CONTINENTAL */}
-            <div className="p-4 bg-white rounded-lg">
+            <div className="p-4 bg-[#051923] border border-gray-700 rounded-lg">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-blue-900">BANCO G&T CONTINENTAL</p>
-                <p className="text-blue-800">Cuenta Monetaria</p>
-                <p className="text-blue-800">No. de cuenta: 039-0019192-5</p>
-                <p className="text-blue-800">A nombre de: Jose Martínez</p>
+                <p className="text-sm font-medium text-white">BANCO G&T CONTINENTAL</p>
+                <p className="text-gray-300">Cuenta Monetaria</p>
+                <p className="text-gray-300">No. de cuenta: 039-0019192-5</p>
+                <p className="text-gray-300">A nombre de: Jose Martínez</p>
               </div>
             </div>
 
             {/* BANCO INDUSTRIAL */}
-            <div className="p-4 bg-white rounded-lg">
+            <div className="p-4 bg-[#051923] border border-gray-700 rounded-lg">
               <div className="space-y-2">
-                <p className="text-sm font-medium text-blue-900">BANCO INDUSTRIAL</p>
-                <p className="text-blue-800">Cuenta de ahorro</p>
-                <p className="text-blue-800">No. de cuenta: 0525075</p>
-                <p className="text-blue-800">A nombre de: Jose Martínez</p>
+                <p className="text-sm font-medium text-white">BANCO INDUSTRIAL</p>
+                <p className="text-gray-300">Cuenta de ahorro</p>
+                <p className="text-gray-300">No. de cuenta: 0525075</p>
+                <p className="text-gray-300">A nombre de: Jose Martínez</p>
               </div>
             </div>
 
             <div className="pt-4">
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-primary-400">
                 <strong>{t.uploadRequired}</strong>
               </p>
             </div>
@@ -302,7 +302,7 @@ const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => 
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               {t.paymentProof}
             </label>
             <input
@@ -316,7 +316,7 @@ const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => 
               <button
                 type="button"
                 onClick={handleClickUpload}
-                className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-600 hover:text-primary-600 hover:border-primary-600 transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-[#051923] border-2 border-dashed border-gray-700 rounded-xl text-gray-300 hover:text-primary-400 hover:border-primary-400 transition-colors flex items-center justify-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
@@ -335,8 +335,8 @@ const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => 
               )}
             </div>
             {error && (
-              <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                <span className="inline-block w-1 h-1 rounded-full bg-red-600" />
+              <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
+                <span className="inline-block w-1 h-1 rounded-full bg-red-400" />
                 {error}
               </p>
             )}
@@ -346,7 +346,7 @@ const PaymentInformation = ({ onContinue, onBack }: PaymentInformationProps) => 
             <button
               type="button"
               onClick={onBack}
-              className="px-6 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="px-6 py-2 text-gray-300 hover:text-white transition-colors"
             >
               {t.back}
             </button>
@@ -488,48 +488,48 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">{t.confirmOrder}</h2>
+      <h2 className="text-xl font-semibold text-white">{t.confirmOrder}</h2>
       
       {success && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
-          <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
+          <div className="bg-[#051923] p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-green-900/20 rounded-full flex items-center justify-center">
                 <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{t.orderSuccess}</h3>
-              <div className="bg-gray-50 p-4 rounded-xl mb-4">
+              <h3 className="text-2xl font-bold text-white mb-2">{t.orderSuccess}</h3>
+              <div className="bg-[#051923] border border-gray-700 p-4 rounded-xl mb-4">
                 <div className="text-left space-y-2">
-                  <p className="text-gray-600"><span className="font-medium">{t.fortniteUsername}:</span> {username}</p>
-                  <p className="text-gray-600"><span className="font-medium">{t.item}:</span> {item.displayName}</p>
-                  <p className="text-gray-600"><span className="font-medium">{t.price}:</span> {item.price.finalPrice} {t.vbucks}</p>
-                  <p className="text-gray-600"><span className="font-medium">{t.status}:</span> <span className="text-primary-600">{t.processing}</span></p>
+                  <p className="text-gray-300"><span className="font-medium text-white">{t.fortniteUsername}:</span> {username}</p>
+                  <p className="text-gray-300"><span className="font-medium text-white">{t.item}:</span> {item.displayName}</p>
+                  <p className="text-gray-300"><span className="font-medium text-white">{t.price}:</span> {item.price.finalPrice} {t.vbucks}</p>
+                  <p className="text-gray-300"><span className="font-medium text-white">{t.status}:</span> <span className="text-primary-400">{t.processing}</span></p>
                 </div>
               </div>
-              <p className="text-gray-600 mb-2">{orderMessage}</p>
-              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mt-4">
+              <p className="text-gray-300 mb-2">{orderMessage}</p>
+              <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden mt-4">
                 <div className="w-1/3 h-full bg-primary-600 animate-[progress_3s_ease-in-out_infinite]"></div>
               </div>
-              <p className="text-gray-500 text-sm mt-4">{t.redirecting}</p>
+              <p className="text-gray-400 text-sm mt-4">{t.redirecting}</p>
             </div>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4">
+        <div className="bg-red-900/20 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl mb-4">
           <span className="block sm:inline">{error}</span>
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg shadow space-y-6">
+      <div className="bg-[#051923] p-6 rounded-lg border border-gray-700 space-y-6">
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">{t.orderSummary}</h3>
+          <h3 className="text-lg font-semibold text-white">{t.orderSummary}</h3>
           
-          <div className="flex gap-4 items-start border-b border-gray-100 pb-4">
-            <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-50">
+          <div className="flex gap-4 items-start border-b border-gray-700 pb-4">
+            <div className="w-20 h-20 rounded-lg overflow-hidden bg-[#051923]">
               <img 
                 src={item.image} 
                 alt={item.displayName} 
@@ -537,35 +537,35 @@ const Payment = ({ item, username, onBack }: PaymentProps) => {
               />
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-gray-900">{item.displayName}</h4>
-              <p className="text-sm text-gray-500">{t.fortniteUsername}: {username}</p>
+              <h4 className="font-medium text-white">{item.displayName}</h4>
+              <p className="text-sm text-gray-300">{t.fortniteUsername}: {username}</p>
             </div>
             <div className="text-right">
-              <p className="font-medium text-gray-900">{item.price.finalPrice} {t.vbucks}</p>
+              <p className="font-medium text-white">{item.price.finalPrice} {t.vbucks}</p>
             </div>
           </div>
 
           <div className="pt-4">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">{t.total}</span>
-              <span className="text-gray-900">{item.price.finalPrice} {t.vbucks}</span>
+              <span className="text-gray-300">{t.total}</span>
+              <span className="text-white">{item.price.finalPrice} {t.vbucks}</span>
             </div>
             <div className="flex justify-between font-medium text-lg mt-4">
-              <span className="text-gray-900">{t.total}</span>
-              <span className="text-primary-600">{item.price.finalPrice} {t.vbucks}</span>
+              <span className="text-white">{t.total}</span>
+              <span className="text-primary-400">{item.price.finalPrice} {t.vbucks}</span>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-100 pt-6">
-          <p className="text-gray-600 mb-6">
+        <div className="border-t border-gray-700 pt-6">
+          <p className="text-gray-300 mb-6">
             {t.confirmOrder}
           </p>
           
           <div className="flex justify-between items-center">
             <button
               onClick={onBack}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              className="px-4 py-2 text-gray-300 hover:text-white"
               disabled={processing}
             >
               {t.back}
@@ -646,23 +646,25 @@ const Checkout = () => {
   if (!items.length) return null;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 mt-24">
-      <CheckoutSteps currentStep={currentStep} isAuthenticated={isAuthenticated} />
-      {currentStep === 1 && (
-        <OrderSummary item={items[0]} onContinue={handleContinueFromSummary} />
-      )}
-      {currentStep === 2 && !isAuthenticated && (
-        <UserInformation onContinue={handleContinueFromUser} onBack={handleBackFromUser} />
-      )}
-      {(currentStep === 2 && isAuthenticated) && (
-        <PaymentInformation onContinue={handleContinueFromPayment} onBack={handleBackFromUser} />
-      )}
-      {(currentStep === 3 && !isAuthenticated) && (
-        <PaymentInformation onContinue={handleContinueFromPayment} onBack={handleBackFromPayment} />
-      )}
-      {((currentStep === 3 && isAuthenticated) || (currentStep === 4 && !isAuthenticated)) && (
-        <Payment item={items[0]} username={username} onBack={handleBackFromConfirmation} />
-      )}
+    <div className="min-h-screen bg-[#003554] pt-24">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <CheckoutSteps currentStep={currentStep} isAuthenticated={isAuthenticated} />
+        {currentStep === 1 && (
+          <OrderSummary item={items[0]} onContinue={handleContinueFromSummary} />
+        )}
+        {currentStep === 2 && !isAuthenticated && (
+          <UserInformation onContinue={handleContinueFromUser} onBack={handleBackFromUser} />
+        )}
+        {(currentStep === 2 && isAuthenticated) && (
+          <PaymentInformation onContinue={handleContinueFromPayment} onBack={handleBackFromUser} />
+        )}
+        {(currentStep === 3 && !isAuthenticated) && (
+          <PaymentInformation onContinue={handleContinueFromPayment} onBack={handleBackFromPayment} />
+        )}
+        {((currentStep === 3 && isAuthenticated) || (currentStep === 4 && !isAuthenticated)) && (
+          <Payment item={items[0]} username={username} onBack={handleBackFromConfirmation} />
+        )}
+      </div>
     </div>
   );
 };

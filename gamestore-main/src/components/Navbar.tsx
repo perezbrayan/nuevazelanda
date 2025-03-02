@@ -22,8 +22,8 @@ const NavLink = ({ to, icon, children }: NavLinkProps) => {
       to={to}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-300 ${
         isActive 
-          ? 'text-primary-600 bg-primary-50/50 font-medium' 
-          : 'text-gray-600 hover:text-primary-500 hover:bg-gray-50/50'
+          ? 'text-primary-400 bg-primary-500/20 font-medium' 
+          : 'text-gray-300 hover:text-primary-400 hover:bg-primary-500/10'
       }`}
     >
       {icon}
@@ -54,11 +54,11 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen }) => {
 
   if (!user) {
     return (
-      <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg py-2 z-50">
+      <div className="absolute right-0 mt-2 w-72 bg-[#00171f] rounded-xl shadow-lg py-2 z-50 border border-gray-800">
         <div className="px-4 py-3">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.welcome}</h3>
-            <p className="text-sm text-gray-600 mb-4">{t.loginToContinue}</p>
+            <h3 className="text-lg font-semibold text-white mb-2">{t.welcome}</h3>
+            <p className="text-sm text-gray-300 mb-4">{t.loginToContinue}</p>
             <Link 
               to="/login" 
               className="block w-full px-4 py-2 mb-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
@@ -67,7 +67,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen }) => {
             </Link>
             <Link 
               to="/register" 
-              className="block w-full px-4 py-2 text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+              className="block w-full px-4 py-2 text-primary-400 bg-primary-500/20 rounded-lg hover:bg-primary-500/30 transition-colors"
             >
               {t.register}
             </Link>
@@ -78,23 +78,23 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ isOpen }) => {
   }
 
   return (
-    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg py-2 z-50">
-      <div className="px-4 py-3 border-b border-gray-100">
+    <div className="absolute right-0 mt-2 w-72 bg-[#00171f] rounded-xl shadow-lg py-2 z-50 border border-gray-800">
+      <div className="px-4 py-3 border-b border-gray-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-            <User className="w-6 h-6 text-primary-600" />
+          <div className="w-10 h-10 rounded-full bg-primary-500/20 flex items-center justify-center">
+            <User className="w-6 h-6 text-primary-400" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{user.username}</h3>
-            <p className="text-sm text-gray-500">{user.email}</p>
+            <h3 className="font-semibold text-white">{user.username}</h3>
+            <p className="text-sm text-gray-400">{user.email}</p>
           </div>
         </div>
       </div>
       
-      <div className="border-t border-gray-100">
+      <div className="border-t border-gray-800">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+          className="w-full flex items-center gap-2 px-4 py-3 text-red-400 hover:bg-red-500/10 transition-colors"
         >
           <LogOut className="w-5 h-5" />
           <span>{t.logout}</span>
@@ -130,13 +130,13 @@ const LanguageDropdown: React.FC<LanguageDropdownProps> = ({ isOpen }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50">
+    <div className="absolute right-0 mt-2 w-48 bg-[#00171f] rounded-xl shadow-lg py-2 z-50 border border-gray-800">
       {(['es', 'en', 'tw'] as const).map((lang) => (
         <button
           key={lang}
           onClick={() => setLanguage(lang)}
-          className={`w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
-            language === lang ? 'text-primary-600 font-medium' : 'text-gray-700'
+          className={`w-full px-4 py-2 text-left hover:bg-primary-500/10 transition-colors ${
+            language === lang ? 'text-primary-400 font-medium' : 'text-gray-300'
           }`}
         >
           {t.languageNames[lang]}
@@ -157,19 +157,19 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onRemoveItem }) => 
   const total = cartItems.reduce((sum, item) => sum + (item.price.finalPrice * item.quantity), 0);
 
   return (
-    <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-lg py-4 z-50">
+    <div className="absolute right-0 mt-2 w-96 bg-[#00171f] rounded-xl shadow-lg py-4 z-50 border border-gray-800">
       <div className="px-4">
-        <h3 className="text-lg font-medium text-gray-900">{t.cart}</h3>
+        <h3 className="text-lg font-medium text-white">{t.cart}</h3>
       </div>
 
       <div className="mt-4 max-h-96 overflow-y-auto">
         {cartItems.length === 0 ? (
           <div className="px-4 py-6 text-center">
-            <p className="text-gray-500">{t.emptyCart}</p>
+            <p className="text-gray-300">{t.emptyCart}</p>
             <p className="text-sm text-gray-400 mt-1">{t.addItems}</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-800">
             {cartItems.map((item) => (
               <div key={item.mainId} className="px-4 py-3 flex items-center gap-4">
                 <img
@@ -178,16 +178,16 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onRemoveItem }) => 
                   className="w-16 h-16 object-cover rounded-lg"
                 />
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-gray-900 truncate">
+                  <h4 className="text-sm font-medium text-white truncate">
                     {item.displayName}
                   </h4>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-gray-400">
                     {item.price.finalPrice} {t.vbucks}
                   </p>
                 </div>
                 <button
                   onClick={() => onRemoveItem(item.mainId)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                  className="p-2 text-gray-400 hover:text-red-400 transition-colors"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
@@ -200,8 +200,8 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ isOpen, onRemoveItem }) => 
       {cartItems.length > 0 && (
         <div className="mt-4 px-4 space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="font-medium text-gray-900">{t.total}</span>
-            <span className="font-medium text-gray-900">{total} {t.vbucks}</span>
+            <span className="font-medium text-white">{t.total}</span>
+            <span className="font-medium text-white">{total} {t.vbucks}</span>
           </div>
           <button
             onClick={() => navigate('/checkout')}
@@ -250,7 +250,7 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="w-full fixed top-0 z-50 bg-white/80 backdrop-blur-md shadow-md">
+    <header className="w-full fixed top-0 z-50 bg-[#00171f]/80 backdrop-blur-md shadow-md">
       <nav className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo and Navigation Links */}
@@ -277,10 +277,10 @@ const Navbar = () => {
             {/* Language Selector */}
             <div className="relative" ref={languageDropdownRef}>
               <button 
-                className="p-2 hover:bg-gray-50/50 rounded-lg transition-all duration-300"
+                className="p-2 hover:bg-primary-500/10 rounded-lg transition-all duration-300"
                 onClick={() => setIsLanguageOpen(!isLanguageOpen)}
               >
-                <Globe className="w-5 h-5 text-gray-600" />
+                <Globe className="w-5 h-5 text-gray-300" />
               </button>
               <LanguageDropdown isOpen={isLanguageOpen} />
             </div>
@@ -288,10 +288,10 @@ const Navbar = () => {
             {/* Cart Button with Dropdown */}
             <div className="relative" ref={cartDropdownRef}>
               <button 
-                className="p-2 hover:bg-gray-50/50 rounded-lg transition-all duration-300 relative"
+                className="p-2 hover:bg-primary-500/10 rounded-lg transition-all duration-300 relative"
                 onClick={toggleCart}
               >
-                <ShoppingCart className="w-5 h-5 text-gray-600" />
+                <ShoppingCart className="w-5 h-5 text-gray-300" />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-primary-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                     {cartCount}
@@ -308,14 +308,14 @@ const Navbar = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                    <User className="w-5 h-5 text-primary-600" />
+                  <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary-400" />
                   </div>
-                  <span className="text-sm font-medium text-gray-700">{user.username}</span>
+                  <span className="text-sm font-medium text-gray-300">{user.username}</span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
+                  className="px-4 py-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>{t.logout}</span>
@@ -325,7 +325,7 @@ const Navbar = () => {
               <div className="flex items-center gap-2">
                 <Link 
                   to="/login"
-                  className="px-4 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                  className="px-4 py-2 text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors"
                 >
                   {t.login}
                 </Link>
@@ -342,19 +342,19 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 hover:bg-gray-50/50 rounded-lg transition-all duration-300"
+            className="lg:hidden p-2 hover:bg-primary-500/10 rounded-lg transition-all duration-300"
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 text-gray-600" />
+              <X className="w-6 h-6 text-gray-300" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-600" />
+              <Menu className="w-6 h-6 text-gray-300" />
             )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-100">
+          <div className="lg:hidden py-4 border-t border-gray-800">
             <div className="space-y-2">
               {navLinks.map((link) => (
                 <NavLink key={link.to} to={link.to} icon={link.icon}>
@@ -364,10 +364,10 @@ const Navbar = () => {
               
               {/* Mobile Auth Buttons */}
               {!user ? (
-                <div className="border-t border-gray-100 mt-4 pt-4 space-y-2">
+                <div className="border-t border-gray-800 mt-4 pt-4 space-y-2">
                   <Link 
                     to="/login"
-                    className="flex items-center gap-2 px-4 py-2 text-primary-600 hover:bg-primary-50 rounded-lg transition-colors w-full"
+                    className="flex items-center gap-2 px-4 py-2 text-primary-400 hover:bg-primary-500/10 rounded-lg transition-colors w-full"
                   >
                     {t.login}
                   </Link>
@@ -379,16 +379,16 @@ const Navbar = () => {
                   </Link>
                 </div>
               ) : (
-                <div className="border-t border-gray-100 mt-4 pt-4">
+                <div className="border-t border-gray-800 mt-4 pt-4">
                   <div className="px-4 py-2 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-                      <User className="w-5 h-5 text-primary-600" />
+                    <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center">
+                      <User className="w-5 h-5 text-primary-400" />
                     </div>
-                    <span className="text-sm font-medium text-gray-700">{user.username}</span>
+                    <span className="text-sm font-medium text-gray-300">{user.username}</span>
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 transition-colors mt-2"
+                    className="w-full flex items-center gap-2 px-4 py-2 text-red-400 hover:bg-red-500/10 transition-colors mt-2"
                   >
                     <LogOut className="w-5 h-5" />
                     <span>{t.logout}</span>
@@ -397,8 +397,8 @@ const Navbar = () => {
               )}
 
               {/* Language Selector for Mobile */}
-              <div className="border-t border-gray-100 mt-4 pt-4">
-                <div className="px-4 py-2 text-gray-600">
+              <div className="border-t border-gray-800 mt-4 pt-4">
+                <div className="px-4 py-2 text-gray-300">
                   <h3 className="font-medium mb-2">{t.selectLanguage}</h3>
                   <div className="space-y-2">
                     {(['es', 'en', 'tw'] as const).map((lang) => (
@@ -407,8 +407,8 @@ const Navbar = () => {
                         onClick={() => setLanguage(lang)}
                         className={`w-full px-4 py-2 text-left rounded-lg transition-colors ${
                           language === lang 
-                            ? 'bg-primary-50 text-primary-600 font-medium' 
-                            : 'hover:bg-gray-50'
+                            ? 'bg-primary-500/20 text-primary-400 font-medium' 
+                            : 'hover:bg-primary-500/10 text-gray-300'
                         }`}
                       >
                         {t.languageNames[lang]}

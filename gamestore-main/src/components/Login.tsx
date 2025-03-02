@@ -49,28 +49,28 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] pt-24">
+    <div className="min-h-screen bg-[#003554] pt-24">
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-white mb-2">
               Iniciar Sesión
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-300">
               Bienvenido de vuelta
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-[#051923] rounded-2xl shadow-xl p-8">
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl">
+              <div className="mb-6 p-4 bg-red-900/20 border border-red-500/20 text-red-400 rounded-xl">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
                   Nombre de usuario
                 </label>
                 <div className="relative">
@@ -80,7 +80,7 @@ const Login = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 pl-11 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-600 transition-all"
+                    className="w-full px-4 py-3 pl-11 bg-[#051923] border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all placeholder-gray-500"
                     placeholder="Tu nombre de usuario"
                     required
                   />
@@ -89,7 +89,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
                   Contraseña
                 </label>
                 <div className="relative">
@@ -99,7 +99,7 @@ const Login = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 pl-11 pr-11 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-600 transition-all"
+                    className="w-full px-4 py-3 pl-11 pr-11 bg-[#051923] border border-gray-700 text-white rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all placeholder-gray-500"
                     placeholder="••••••••"
                     required
                   />
@@ -107,7 +107,7 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-300"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -125,9 +125,9 @@ const Login = () => {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 ¿No tienes una cuenta?{' '}
-                <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+                <Link to="/register" className="text-primary-400 hover:text-primary-300 font-medium">
                   Crear cuenta
                 </Link>
               </p>
