@@ -7,7 +7,6 @@ import {
   Button,
   Typography,
   Alert,
-  Paper
 } from '@mui/material';
 import { adminService } from '../services/adminService';
 
@@ -40,31 +39,45 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Paper
-          elevation={3}
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: '#003554',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        py: 8
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <Box
           sx={{
-            padding: 4,
+            bgcolor: '#051923',
+            p: 4,
+            borderRadius: 3,
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%',
           }}
         >
-          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
+          <Typography component="h1" variant="h5" sx={{ mb: 3, color: 'white' }}>
             Iniciar Sesión - Admin
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+            <Alert 
+              severity="error" 
+              sx={{ 
+                width: '100%', 
+                mb: 2,
+                bgcolor: 'rgba(211, 47, 47, 0.1)',
+                color: '#ef5350',
+                '& .MuiAlert-icon': {
+                  color: '#ef5350'
+                }
+              }}
+            >
               {error}
             </Alert>
           )}
@@ -82,6 +95,27 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  bgcolor: '#051923',
+                  color: 'white',
+                  '& fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.23)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#1976d2',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'rgba(255, 255, 255, 0.7)',
+                },
+                '& .Mui-focused .MuiInputLabel-root': {
+                  color: '#1976d2',
+                },
+              }}
             />
             <TextField
               margin="normal"
@@ -95,20 +129,50 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  bgcolor: '#051923',
+                  color: 'white',
+                  '& fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.23)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#1976d2',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  color: 'rgba(255, 255, 255, 0.7)',
+                },
+                '& .Mui-focused .MuiInputLabel-root': {
+                  color: '#1976d2',
+                },
+              }}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                bgcolor: '#1976d2',
+                '&:hover': {
+                  bgcolor: '#1565c0',
+                },
+                height: '48px',
+                borderRadius: '12px',
+              }}
               disabled={loading}
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
           </Box>
-        </Paper>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

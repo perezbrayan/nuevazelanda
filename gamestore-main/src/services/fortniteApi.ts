@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-interface FortniteItem {
+export interface FortniteItem {
   mainId: string;
   offerId: string;
   displayName: string;
@@ -28,6 +28,14 @@ interface FortniteItem {
     type: {
       name: string;
     };
+    images?: {
+      icon?: string;
+      transparent?: string;
+      featured?: string;
+      background?: string;
+      icon_background?: string;
+      full_background?: string;
+    };
   }>;
   buyAllowed: boolean;
   categories: string[];
@@ -39,6 +47,7 @@ interface FortniteItem {
   images: {
     icon: string;
     featured: string;
+    transparent?: string;
   };
 }
 
@@ -61,31 +70,20 @@ export const getDailyShop = async () => {
       throw new Error('Formato de respuesta inválido: no se encontró shop o no es un array');
     }
 
-    // Términos relacionados con música para filtrar
-    const musicTerms = [
-      'music', 'música', 'track', 'pista', 
-      'remix', 'beat', 'song', 'canción', 
-      'lobby', 'audio', 'sound', 'sonido',
-      'tune', 'melodía', 'melody', 'ritmo',
-      'rhythm', 'baile', 'dance'
-    ];
-
     const items = data.shop
       .filter((item: any) => {
-        // Verificar si es un item de música
+        // Verificar si el item es válido
         if (!item || !item.mainId) return false;
         
-        const nameLower = item.displayName?.toLowerCase() || '';
-        const descLower = item.displayDescription?.toLowerCase() || '';
-        const mainTypeLower = item.mainType?.toLowerCase() || '';
-        
-        // Excluir si contiene términos relacionados con música
-        return !musicTerms.some(term => 
-          nameLower.includes(term) || 
-          descLower.includes(term) || 
-          mainTypeLower.includes(term) ||
-          mainTypeLower.includes('emote') // Excluir emotes también ya que suelen ser música
+        // Verificar si tiene imágenes válidas
+        const hasValidImages = Boolean(
+          item.displayAssets?.[0]?.url || // Nueva URL de displayAssets
+          item.granted?.[0]?.images?.icon ||
+          item.granted?.[0]?.images?.transparent ||
+          item.displayAssets?.[0]?.background
         );
+
+        return hasValidImages;
       })
       .map((item: any) => ({
         mainId: item.mainId,
@@ -94,7 +92,10 @@ export const getDailyShop = async () => {
         displayDescription: item.displayDescription || '',
         displayType: item.displayType || '',
         mainType: item.mainType || '',
-        displayAssets: item.displayAssets || [],
+        displayAssets: item.displayAssets?.map((asset: any) => ({
+          full_background: asset.url || asset.full_background || '', // Usar url primero
+          background: asset.background || ''
+        })) || [],
         price: {
           regularPrice: item.price?.regularPrice || 0,
           finalPrice: item.price?.finalPrice || 0,
@@ -108,17 +109,42 @@ export const getDailyShop = async () => {
           id: item.section?.id || '',
           name: item.section?.name || ''
         },
-        granted: item.granted || [],
+        granted: item.granted?.map((grant: any) => ({
+          type: {
+            name: grant.type?.name || grant.type || ''
+          },
+          images: {
+            icon: grant.images?.icon || '',
+            transparent: grant.images?.transparent || '',
+            featured: grant.images?.featured || '',
+            background: grant.images?.background || '',
+            icon_background: grant.images?.icon_background || '',
+            full_background: grant.images?.full_background || ''
+          }
+        })) || [],
         buyAllowed: item.buyAllowed || false,
         categories: item.categories || [],
         banner: item.banner,
         giftAllowed: item.giftAllowed || false,
         groupIndex: item.groupIndex || 0,
         offerTag: item.offerTag || null,
-        priority: item.priority || 0
+        priority: item.priority || 0,
+        images: {
+          icon: item.granted?.[0]?.images?.icon || '',
+          featured: item.displayAssets?.[0]?.url || item.displayAssets?.[0]?.full_background || '',
+          transparent: item.granted?.[0]?.images?.transparent || ''
+        }
       }));
 
-    console.log('Items procesados (sin música):', items);
+    // Agregar log para ver la estructura de las imágenes
+    console.log('Ejemplo de imágenes en item procesado:', {
+      displayAssets: items[0]?.displayAssets,
+      grantedImages: items[0]?.granted?.[0]?.images,
+      images: items[0]?.images
+    });
+
+    console.log('Items procesados:', items.length);
+    console.log('Ejemplo de item procesado:', items[0]);
     return items;
   } catch (error) {
     console.error('Error en getDailyShop:', error);

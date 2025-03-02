@@ -30,6 +30,8 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+  will-change: transform; /* Optimiza el rendimiento del scroll */
 }
 
 .hero-overlay {
